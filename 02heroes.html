@@ -1,0 +1,114 @@
+
+<!--
+Goal: Read the JSON response and test by displaying one of the values on your HTML
+-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+
+    <title>Our superheroes</title>
+	<link href="https://fonts.googleapis.com/css?family=Faster+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+  </head>
+
+  <body>
+	  
+	  <!-- Let's create some basic html elements to which can append elements as needed via our JS. Their data can be filled using the JSON reponse we receive-->
+	  
+	  <header></header>
+	  <section></section>
+	  
+    <script>
+    
+	var request = new XMLHttpRequest();
+		
+	//Using the XMLHttpRequest: GET the URL > SET the response type > SEND the reponse > Validate that the request was successful
+	var requestURL = "https://mdn.github.io/learning-area/javascript/oojs/json/superheroes.json";
+	request.open("GET",requestURL);
+	request.responseType = "json";
+	request.send();
+	alert(request.status); //Returns 0 because we HAVEN'T WAITED long enough for the REQUEST to COMPLETE
+	
+	//Instead if you check the status WHEN the request completes using request.onload, you'd see 200, which is success
+	request.onload = function(){
+		alert(request.status);
+		//Receive the json response. At this point the JSON reponse is CONVERTED to a JAVSCRIPT.
+		var superHeroes = request.response;
+	    alert(superHeroes); //Should see object object
+		//What you want to do with the Javascript object is totally up to you. In this case, we want to simply display it's contents on our html. In order to do this, we will need i) to extract the JSON contents of choice from the object ii) visual html elements to which the extracted contents can be assigned.
+		
+		superHeroes.squadName //Let's say we want this as our h1 Element. It's easier if you do this inside the container header element we already have on the html. 
+		
+		superHeroes.homeTown; //As para below the h1. It's easier if you do this inside a container the section element we altready have on the html
+		
+		superHeroes.formed; //As a continuation of the para
+		
+		//Each member profile has list of items. Name = h2 element. Secret Name = Para1. Powers = unordered list
+		
+		for (i=0;i<superHeroes.members.length;i++){
+			superHeroes.members[i].name;
+			superHeroes.members[i].secretIdentity;
+			for (j=0;j<superHeroes.members[i].powers.length;j++){
+				superHeroes.members[i].powers[j];
+			}
+		
+		}
+		
+		//Let's create the html elements we identified, and learning from the code above, assign JSON values to them
+		
+		//Let's display common values within the header tag
+		//h1 element on header tag
+		var h1Header = document.createElement("h1");
+		h1Header.textContent = superHeroes.squadName;
+		document.querySelector("header").appendChild(h1Header); //Append h1 to the existing header element in html
+		
+		//p element on header tag
+		var pHeader = document.createElement("p");
+		pHeader.textContent = "Secret Identity: " +superHeroes.homeTown + " // Formed: " + superHeroes.formed;
+		document.querySelector("header").appendChild(pHeader);	//Append p to the existing header element in html
+		
+		
+		//As for the member specific list of values which will be within their own article tag, they will wrap up to the section tag. We will display them as h2, p and ul elements. 
+		
+		
+		for (i=0;i<superHeroes.members.length;i++){
+			
+			//Container for each member
+			var articleinSection = document.createElement("article");
+			document.querySelector("section").appendChild(articleinSection);
+			
+			//Name of the member
+			var name = superHeroes.members[i].name;
+			var h2Element = document.createElement("h2"); //for member name
+			h2Element.textContent = name;
+			articleinSection.appendChild(h2Element);
+			
+			//Secret name of the member
+			var secretIdentity = "Secret Identity: " +superHeroes.members[i].secretIdentity;
+			var pElement = document.createElement("p"); //for secret name
+			pElement.textContent = secretIdentity;
+			articleinSection.appendChild(pElement);
+			
+			//Unordered list of powers
+			var ulElement = document.createElement("ul"); //for each member's list of powers
+			ulElement.textContent = "Powers: "
+			articleinSection.appendChild(ulElement);
+
+			
+			for (j=0;j<superHeroes.members[i].powers.length;j++){
+				var power = superHeroes.members[i].powers[j];
+				//List elements of unordered list of powers
+				var liElement = document.createElement("li"); //for each member's list of powers
+				liElement.textContent = power;
+				ulElement.appendChild(liElement);
+			}
+		
+		}
+		
+	}	
+
+		
+    </script>
+  </body>
+</html>
